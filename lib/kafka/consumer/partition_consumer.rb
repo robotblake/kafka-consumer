@@ -128,6 +128,10 @@ module Kafka
             start_offset = initial_offset
             retry
 
+          rescue Poseidon::Connection::ConnectionFailedError, Poseidon::Connection::TimeoutException
+            pc.close
+            retry
+
           ensure
             consumer.logger.debug "Stopping consumer for #{partition.topic.name}/#{partition.id}..."
             pc.close
