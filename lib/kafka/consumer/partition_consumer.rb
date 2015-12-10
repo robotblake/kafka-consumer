@@ -108,6 +108,7 @@ module Kafka
 
             until interrupted?
               pc.fetch(max_wait_ms: max_wait_ms).each do |message|
+                break if interrupted?
                 message = Message.new(partition.topic.name, partition.id, message)
                 handler.call(message)
                 @last_processed_offset = message.offset
